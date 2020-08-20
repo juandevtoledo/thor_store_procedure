@@ -19,7 +19,8 @@ SET NOCOUNT ON;
  (
 		cer_id NUMERIC(18,0),
         ter_Id NUMERIC(18,0),
-        valor_aplicar NUMERIC(18,0)
+        valor_aplicar NUMERIC(18,0),
+		vigencia_aplicar date
  )
 --Buscar Certificados vigentes 
 --Businnes Rules
@@ -42,8 +43,11 @@ FETCH NEXT
 FROM @getid INTO @cer_id_result, @ter_id_result
 WHILE @@FETCH_STATUS = 0
 BEGIN
-	 insert into #certificados_por_tercero (cer_id, ter_Id,valor_aplicar)
-	 values (@cer_id_result,@ter_id_result,18000)
+	
+	
+	 insert into #certificados_por_tercero (cer_id, ter_Id,valor_aplicar,vigencia_aplicar)
+	 values (@cer_id_result,@ter_id_result,18000,getdate())
+
 	 FETCH NEXT
 	 FROM @getid INTO @cer_id_result, @ter_id_result
 END
