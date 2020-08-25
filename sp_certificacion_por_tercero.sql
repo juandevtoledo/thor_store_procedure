@@ -12,6 +12,8 @@ ALTER PROCEDURE [sp_certificacion_por_tercero]
 AS   
 DECLARE @cer_id_result NUMERIC(18,0)
 DECLARE @ter_id_result NUMERIC(18,0)
+DECLARE @vigencia_aplicar date
+DECLARE @valor_aplicar NUMERIC(18,0)
 DECLARE @getid CURSOR
 SET NOCOUNT ON;  
  -- Tabla para guardar certificados del tercero
@@ -43,10 +45,11 @@ FETCH NEXT
 FROM @getid INTO @cer_id_result, @ter_id_result
 WHILE @@FETCH_STATUS = 0
 BEGIN
-	
+		
+	 EXEC dbo.sp_obtener_vigencia @ter_Id ,@cer_id_result, @vigencia_aplicar OUTPUT , @valor_aplicar OUTPUT	
 	
 	 insert into #certificados_por_tercero (cer_id, ter_Id,valor_aplicar,vigencia_aplicar)
-	 values (@cer_id_result,@ter_id_result,18000,getdate())
+	 values (@cer_id_result,@ter_id_result,@valor_aplicar,@vigencia_aplicar)	 
 
 	 FETCH NEXT
 	 FROM @getid INTO @cer_id_result, @ter_id_result
