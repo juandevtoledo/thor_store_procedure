@@ -1,5 +1,3 @@
-USE [thor_pruebas]
-GO  
 -- =============================================
 -- Author:		Juan Gabriel Toledo
 -- Create date: 2020-08-19
@@ -9,6 +7,7 @@ GO
 ALTER PROCEDURE [sp_obtener_vigencia] 
     @ter_Id  NUMERIC(18,0),
 	@cer_id  NUMERIC(18,0),
+	@cer_id_vigente  NUMERIC(18,0),
 	@vigencia date OUTPUT,
 	@valorAplicar NUMERIC(18,0) OUTPUT
 AS
@@ -24,7 +23,8 @@ BEGIN
 	 select top 1  @apl_pago_vigencia=apl.aplPago_Vigencia,@apl_pago_valor=aplPago_Valor
 	 FROM dbo.NewAplicacionPagos apl
 	 where apl.dev_Id = 0 and apl.aplPago_Reversion <> 2 
-	 and apl.ter_Id=@ter_Id and apl.cer_Id = @cer_id
+	 and apl.ter_Id=@ter_Id 
+	 and ( apl.cer_Id = @cer_id or apl.cer_Id = @cer_id_vigente)
 	 order by aplPago_Vigencia desc
 	 -- se busca informacion del certificado 
 	 select @cer_vigencia=cer.cer_VigenciaDesde , @cer_prima_total=cer.cer_PrimaTotal,
